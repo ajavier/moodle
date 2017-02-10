@@ -22,10 +22,9 @@
  * @copyright 2016 redPIthemes
  *
  */
- 
-$hasfrontpageblocks = ($PAGE->blocks->region_has_content('side-pre', $OUTPUT) || $PAGE->blocks->region_has_content('side-post', $OUTPUT));
-$carousel_pos = $PAGE->theme->settings->carousel_position;
-$haslogo = (!empty($PAGE->theme->settings->logo));
+
+$hide_breadrumb_setting = theme_lambda_get_setting('hide_breadcrumb');
+$hide_breadrumb = ((!isloggedin() or isguestuser()) and $hide_breadrumb_setting);
 $standardlayout = (empty($PAGE->theme->settings->layout)) ? false : $PAGE->theme->settings->layout;
 
 if (right_to_left()) {
@@ -39,72 +38,60 @@ echo $OUTPUT->doctype() ?>
 <head>
     <title><?php echo $OUTPUT->page_title(); ?></title>
     <link rel="shortcut icon" href="<?php echo $OUTPUT->favicon(); ?>" />
-    <?php echo $OUTPUT->standard_head_html() ?>
+    <?php echo $OUTPUT->standard_head_html(); ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <noscript>
-			<link rel="stylesheet" type="text/css" href="<?php echo $CFG->wwwroot;?>/theme/lambda/style/nojs.css" />
-	</noscript>
     <!-- Google web fonts -->
     <?php require_once(dirname(__FILE__).'/includes/fonts.php'); ?>
 </head>
 
-<body <?php echo $OUTPUT->body_attributes('two-column'); ?>>
+<body <?php echo $OUTPUT->body_attributes(); ?>>
 
-<?php echo $OUTPUT->standard_top_of_body_html() ?>
+<?php echo $OUTPUT->standard_top_of_body_html(); ?>
 
 <div id="wrapper">
+
 <?php require_once(dirname(__FILE__).'/includes/header.php'); ?>
 
+<!-- Start Main Regions -->
 <div id="page" class="container-fluid">
 
-<?php require_once(dirname(__FILE__).'/includes/slideshow.php');?>
-	<header id="page-header" class="clearfix"> </header>
+    <header id="page-header" class="clearfix">
+    	<?php if (!($hide_breadrumb)) { ?>
+        <div id="page-navbar" class="clearfix">
+            <div class="breadcrumb-nav"><?php echo $OUTPUT->navbar(); ?></div>
+            <nav class="breadcrumb-button"><?php echo $OUTPUT->page_heading_button(); ?></nav>
+        </div>
+        <?php } ?>
+    </header>
+
     <div id="page-content" class="row-fluid">
-    	<?php if ($hasfrontpageblocks==1) { ?>
-            <div id="<?php echo $regionbsid ?>" class="span9">
+        <div id="<?php echo $regionbsid ?>" class="span9">
             <div class="row-fluid">
             	<?php if ($standardlayout) { ?>
                 <section id="region-main" class="span8 pull-right">
                 <?php } else { ?>
                 <section id="region-main" class="span8">
                 <?php } ?>
-        <?php } else { ?>
-        	<div id="<?php echo $regionbsid ?>">
-            <div class="row-fluid">
-            	<section id="region-main" class="span12">
-        <?php } ?>
-            	<?php
-            		echo $OUTPUT->course_content_header();
-					if ($carousel_pos=='0') require_once(dirname(__FILE__).'/includes/carousel.php');
-            		echo $OUTPUT->main_content();
-            		echo $OUTPUT->course_content_footer();
-					if ($carousel_pos=='1') require_once(dirname(__FILE__).'/includes/carousel.php');
-            	?>
-        		</section>
-        	<?php
-        	if ($hasfrontpageblocks==1) { 
+                    <?php
+                    echo $OUTPUT->course_content_header();
+                    echo $OUTPUT->main_content();
+                    echo $OUTPUT->course_content_footer();
+                    ?>
+                </section>
+                <?php 
 				if ($standardlayout) {echo $OUTPUT->blocks('side-pre', 'span4 desktop-first-column pull-left');}
 				else {echo $OUTPUT->blocks('side-pre', 'span4 desktop-first-column pull-right');}
-			} ?>
+				?>
             </div>
-        	</div>
+        </div>
         <?php echo $OUTPUT->blocks('side-post', 'span3'); ?>
     </div>
+    
+    <!-- End Main Regions -->
 
-    <?php if (is_siteadmin()) { ?>
-	<div class="hidden-blocks">
-    	<div class="row-fluid">
-        	<h4><?php echo get_string('visibleadminonly', 'theme_lambda') ?></h4>
-            <?php
-                echo $OUTPUT->blocks('hidden-dock');
-            ?>
-    	</div>
+    <a href="#top" class="back-to-top"><i class="fa fa-chevron-circle-up fa-3x"></i><p><?php print_string('backtotop', 'theme_lambda'); ?></p></a>
+
 	</div>
-	<?php } ?>
-
-	<a href="#top" class="back-to-top"><i class="fa fa-chevron-circle-up fa-3x"></i><p><?php print_string('backtotop', 'theme_lambda'); ?></p></a>
-
-</div>
 
 	<footer id="page-footer" class="container-fluid">
 		<?php require_once(dirname(__FILE__).'/includes/footer.php'); ?>
@@ -112,9 +99,13 @@ echo $OUTPUT->doctype() ?>
 
     <?php echo $OUTPUT->standard_end_of_body_html() ?>
 
+</div>
+
+
 <!--[if lte IE 9]>
 <script src="<?php echo $CFG->wwwroot;?>/theme/lambda/javascript/ie/iefix.js"></script>
 <![endif]-->
+
 
 <script>
 $(window).on('load resize', function () {
@@ -144,42 +135,8 @@ jQuery(document).ready(function() {
         return false;
     })
 });
-
-<?php if ($hasslideshow) { ?>
-	jQuery(function(){
-		jQuery('#camera_wrap').camera({
-			fx: '<?php echo $imgfx; ?>',
-			height: 'auto',
-			loader: '<?php echo $loader; ?>',
-			thumbnails: false,
-			pagination: false,
-			autoAdvance: <?php echo $advance; ?>,
-			hover: false,
-			navigationHover: <?php echo $navhover; ?>,
-			mobileNavHover: <?php echo $navhover; ?>,
-			opacityOnGrid: false
-		});
-	});
-<?php } ?>
-
-<?php if ($hascarousel) { ?>
-	jQuery(document).ready(function(){
-  		jQuery('.slider1').bxSlider({
-			pager: false,
-			nextSelector: '#slider-next',
-			prevSelector: '#slider-prev',
-			nextText: '>',
-			prevText: '<',
-			slideWidth: 240,
-    		minSlides: 1,
-    		maxSlides: 6,
-			moveSlides: 1,
-    		slideMargin: 10			
-  		});
-	});
-<?php } ?>
-
 </script>
+
 
 </body>
 </html>

@@ -668,6 +668,6 @@ function theme_lambda_set_background_repeat($css, $repeat, $size) {
 function theme_lambda_page_init(moodle_page $page) {
     $page->requires->jquery();
 	$page->requires->jquery_plugin('jquery.easing.1.3', 'theme_lambda'); 
-	$page->requires->jquery_plugin('camera_main_slider', 'theme_lambda');
+	$page->requires->jquery_plugin('camera_slider', 'theme_lambda');
     $page->requires->jquery_plugin('jquery.bxslider', 'theme_lambda'); 
 }

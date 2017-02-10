@@ -23,13 +23,5 @@
  *
  */
 
-defined('MOODLE_INTERNAL') || die;
+require_once('renderers/core_renderer.php');
 
-$plugin->component = 'theme_lambda'; // Full name of the plugin (used for diagnostics)
-$plugin->release   = '1.56';
-$plugin->version   = 2017010632; // The current module version (Date: YYYYMMDDXX)
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->requires  = 2013051401; // Requires this Moodle version
-$plugin->dependencies = array(
-    'theme_bootstrapbase'  => 2013050100,
-);

@@ -56,9 +56,7 @@ if (strpos($checkuseragent, 'MSIE 8')) {$username = str_replace("'", "&prime;", 
         	
             <?php if (!$haslogo) { ?>
             	<div class="span6">
-                	<div class="title-text">
-              		<h1 id="title"><?php echo $SITE->fullname; ?></h1>
-                    </div>
+              		<h1 id="title" style="line-height: 2em"><?php echo $SITE->fullname; ?></h1>
                 </div>
             <?php } else { ?>
             	<div class="span6">
@@ -130,7 +128,6 @@ if (strpos($checkuseragent, 'MSIE 8')) {$username = str_replace("'", "&prime;", 
 	<?php } else {
 
  		echo '<div id="loggedin-user">';		
-		echo $OUTPUT->navbar_plugin_output();
 		echo $OUTPUT->user_menu();
 		echo $OUTPUT->user_picture($USER, array('size' => 80, 'class' => 'welcome_userpicture'));		
 		echo '</div>';

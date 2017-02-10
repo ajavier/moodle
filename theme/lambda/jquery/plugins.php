@@ -25,6 +25,6 @@
 
 $plugins = array(
 	'jquery.easing.1.3'	=> array('files' => array('jquery.easing.1.3.js')),
-	'camera_slider' => array('files' => array('camera.min.js')),
-	'jquery.bxslider' => array('files' => array('jquery.bxslider.js'))		
+	'camera_main_slider' => array('files' => array('camera.js')),
+	'jquery.bxslider' => array('files' => array('jquery.bxslider32.js'))		
 );

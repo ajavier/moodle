@@ -156,7 +156,6 @@ jQuery(document).ready(function() {
 			autoAdvance: <?php echo $advance; ?>,
 			hover: false,
 			navigationHover: <?php echo $navhover; ?>,
-			mobileNavHover: <?php echo $navhover; ?>,
 			opacityOnGrid: false
 		});
 	});
