@@ -10,11 +10,7 @@ $has_additional_html = (!empty($PAGE->theme->settings->carousel_add_html));
 <?php if ($has_additional_html) { ?>
 <div class="row-fluid frontpage">
   <div class="span4">
-  <?php 
-  		$additional_html = $PAGE->theme->settings->carousel_add_html;
-		$additional_html = format_text($additional_html, FORMAT_HTML);
-  		echo $additional_html;
-	?>  
+  <?php echo $PAGE->theme->settings->carousel_add_html; ?>  
   </div>
 <div class="span8">
 <?php } ?>

@@ -58,8 +58,12 @@ a:hover {
 	transition: all 0.3s ease 0.1s;
 	text-decoration: none;
 }
-.block ul.block_tree a, .breadcrumb a, .instancename, .block_book_toc li a, .block_site_main_menu li a, .navbottom .booknext, .navbottom .bookprev, .navbottom .bookexit  {
+.block ul.block_tree a, .breadcrumb a, .instancename {
 	color:#555;
+}
+.dir-rtl a.logo {
+    display: block;
+    float: right;
 }
 .sitetopic .section .activity:hover, .course-content .section .activity:hover {
     background: none;
@@ -111,11 +115,10 @@ fieldset.coursesearchbox {
 #page-mod-forum-discuss .discussioncontrols {
     margin: 5px;
 }
-.empty-region-side-post.used-region-side-pre #region-bs-main-and-pre {
-	width: 100%;
-}
-.content-only #region-bs-main-and-pre, .content-only #region-main {
-    width: 100%;
+/* Negate core style when using 'interesting' layout so that browser renders drop target
+   correctly. */
+.empty-region-side-pre #block-region-side-pre, .empty-region-side-post #block-region-side-post {
+    display: block;
 }
 .back-to-top [class^="icon-"] {
 	font-size: 3em;
@@ -157,13 +160,8 @@ h2.main,
 }
 h1#title {
 	color: [[setting:maincolor]];
+	white-space: nowrap;
 	font-size: 2.1em;
-}
-.title-text {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-	justify-content: center;
 }
 h2#subtitle {
 	font-size: 1em;
@@ -323,20 +321,6 @@ input{padding-left:40px;}
     font-weight: bold;
     line-height: 1.15em;
 	word-wrap: break-word;
-}
-.popover-region {
-    float: left;
-    padding-right: 12px;
-    margin-top: 8px;
-}
-.popover-region-container {
-    margin-top: 33px;
-}
-.popover-region-toggle::before {
-    bottom: -9px;
-}
-.popover-region-toggle::after {
-    bottom: -10px;
 }
 
 /* =========================================================== *
@@ -543,19 +527,18 @@ ul.breadcrumb li:last-child:after {
 	position:relative;
 	z-index:0;
 }
-.nav .divider {
-    border-left: 1px solid rgba(166, 166, 166, 0.25);
-    border-right: 1px solid rgba(33, 33, 33, 0.25);
-    height: 50px;
-    overflow: hidden;
-    width: 0;
+.navbar .nav-divider-right {
+	height:50px;
+	border-left:1px solid rgba(250, 250, 250, 0.1);
+	margin:0;
+	float: left;
 }
-.nav .dropdown-menu .divider {
-    border-left: 0 none;
-    border-right: 0 none;
-    height: 1px;
-    margin: 0;
-    width: auto;
+.navbar .nav-divider-left {
+	float:left;
+	height:50px;
+	border-right:1px solid rgba(250, 250, 250, 0.1);
+	border-left:1px solid rgba(0, 0, 0, 0.2);
+	margin:0;
 }
 .navbar .open > .dropdown-menu {
     overflow: visible !important;
@@ -564,6 +547,41 @@ ul.breadcrumb li:last-child:after {
 /* =========================================================== *
 Course
 ============================================================== */
+.coursebox {
+    border: 1px solid #eee;
+	border-radius:0;
+	border-left:2px solid [[setting:maincolor]];
+}
+.coursebox > .info > h3.coursename {
+    float: left;
+}
+.coursebox > .info > .coursename a, .coursebox > .info > .name a {
+	background-image:none;
+	padding:0;
+	color:#555;
+}
+.coursebox > .info > .coursename a.dimmed {
+    color: #999;
+}
+.coursebox.collapsed > .info > .coursename a {
+    line-height: 1em;
+}
+.coursebox > .info > .coursename a:before, .coursebox > .info > .name a:before {
+    background-color: [[setting:maincolor]];
+    content: "\f090";
+    border-radius: 2px;
+    color: #FFFFFF;
+    display: block;
+    float: left;
+    font-family: FontAwesome;
+    height: 1.35em;
+	line-height:1.35em;
+    margin-right: 0.5em;
+    margin-top: -0.2em;
+    padding-top: 0.1em;
+    text-align: center;
+    width: 1.5em;
+}
 .course-content ul li.section.main {
     border-bottom: 0px none;
     background: url([[pix:theme|bg/dot]]) bottom repeat-x;
@@ -574,6 +592,10 @@ Course
 }
 .course-content .current .content {
     background-color: #fff;
+}
+.course_category_tree .category > .info {
+    border-radius: 2px;
+    margin: 3px 0 8px;
 }
 .section .label .contentwithoutlink, .section .label .activityinstance {
     padding-right: 0;
@@ -595,11 +617,17 @@ Course
     overflow: auto;
 	padding-bottom: 1px;
 }
-.empty-region-side-pre.empty-region-side-post .mod-indent-outer .no-overflow {
+.mod-indent-outer .no-overflow, .mod-indent .no-overflow {
     overflow: inherit;
 }
-.mod-indent-outer .no-overflow, .mod-indent .no-overflow {
-    overflow: auto;
+h2.pagetitle {
+    padding: 0px;
+    margin: 0px;
+    font-size: 1.2em;
+    line-height: 35px;
+    color: #777;
+    background: url([[pix:theme|bg/dot]]) left center repeat-x;
+    background-size: 20px 3px;
 }
 .firstword {
     color: [[setting:maincolor]] !important;
@@ -613,10 +641,6 @@ Course
 }
 .label, .badge {
 	font-weight: normal;
-}
-table.flexible, .generaltable {
-    display: block;
-    overflow-x: auto;
 }
 table.flexible th, .generaltable th, table.flexible td, .generaltable td {
     padding: 4px;
@@ -689,256 +713,15 @@ td.ygtvcell {
 	content: "\f0fe";
 	margin-right: 6px;
 }
-a.dimmed .instancename {
-    color: #999;
-}
-.modal.modal-in-page {
-    margin: 0 auto 35px;
-}
-
-/*================================================== * 
-course formats
-=====================================================*/
-.ctopics.topics .content .toggle h3.sectionname, .ctopics.topics .content .toggle h3.section-title {
-    background: transparent none repeat scroll 0 0;
-    border: medium none;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 0;
-}
-.course-content .single-section .section-navigation .title {
-    background: rgba(0, 0, 0, 0) none repeat scroll 0 0 !important;
-    color: #555 !important;
-    font-size: 24px !important;
-    line-height: 30px !important;
-    margin-bottom: unset;
-    padding: 0 !important; /*unset!*/
-}
-.course-content .single-section .section-navigation .title:after {
-    background: [[setting:maincolor]] none repeat scroll 0 0;
-    border-radius: 4px;
-    content: "";
-    display: block;
-    height: 4px;
-    margin: 20px auto;
-    position: relative;
-    width: 50px;
-}
 #section_footer > a#next_section {
     float: right;
 }
 #section_footer > a#previous_section {
     float: left;
 }
-#section_footer > a#previous_section .nav_icon .fa, #section_footer > a#next_section .nav_icon .fa {
-    background: [[setting:maincolor]] none repeat scroll 0 0;
-    color: #fff;
-    font-size: 1.4em;
-    padding: 6px 8px;
-}
-#section_footer > a#previous_section {
-    float: left;
-    width: 40%;
-}
-#section_footer > a#next_section {
-    float: right;
-    text-align: right;
-    width: 40%;
-}
-#section_footer {
-    margin-top: 20px;
-}
-
-/*================================================== * 
-course category
-=====================================================*/
-.coursebox {
-    border: medium none;
-	border-bottom: 1px solid #e5e5e5;
-    margin-bottom: 25px;
-    padding-bottom: 35px;
-}
-.coursebox > .info > .coursename a {
-    background-image: none;
-    padding-left: 0;
-}
-.courses .coursebox:hover,  .courses .coursebox.even {
-    background-color: transparent;
-}
-.coursebox .content .teachers, .coursebox .content .courseimage, .coursebox .content .coursefile {
-    width: unset;
-}
-.coursebox > .info > .coursename, .coursebox .content .teachers, .coursebox .content .courseimage, .coursebox .content .coursefile {
-    clear: unset;
-    float: unset;
-}
-.coursebox .content .summary, .coursebox .content .coursecat {
-    width: 98%;
-    float: unset;
-    padding-top: 0.5em;
-}
-.coursebox .content .courseimage {
-    float: left;
-    margin-right: 2em;
-    background-position: center center;
-    background-size: cover;
-}
-@media (min-width: 1187px) {.coursebox .content .courseimage {height:225px; width:325px;}}
-@media (max-width: 1186px) {.coursebox .content .courseimage {height:200px; width:290px;}}
-@media (max-width: 980px) {.coursebox .content .courseimage {height:150px; width:220px;} .coursebox .content .summary, .coursebox .content .coursecat {padding-top:0;}}
-@media (max-width: 580px) {.coursebox .content .courseimage {height:250px; width:100%; float:unset;}}
-.coursebox .content h3.coursename a, .coursebox .content h3.coursename a:hover, .course_category_tree .category.with_children h3.categoryname a {
-    color: #555;
-    font-size: 20px;
-}
-.coursebox .content .summary.dimmed, .coursebox .content .summary.dimmed h3.coursename a, .course_category_tree .category.with_children.dimmed_category h3.categoryname a {
-    color: #999;
-}
-.coursebox .content .course-btn .btn.btn-primary {
-    margin-top: 0.75em;
-}
-.coursebox > .info > .coursename {
-    display: none;
-}
-.coursebox.collapsed > .info > .coursename {
-    display: block;
-}
-.course_category_tree .collapsible-actions {
-    border-bottom: 3px dashed [[setting:maincolor]];
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-}
-.course_category_tree .collapsible-actions::before {
-    background: #f2f2f2 none repeat scroll 0 0;
-    border-radius: 50%;
-    color: #555;
-    content: "\f115";
-    float: left;
-    font-family: FontAwesome;
-    font-size: 3.5em;
-    height: 75px;
-    line-height: 75px;
-    text-align: center;
-    width: 75px;
-}
-.course_category_tree .category > .info {
-    background-color: transparent;
-    border: medium none;
-    border-radius: 4px;
-    box-shadow: none;
-}
-.course_category_tree .category.with_children.collapsed > .info > .categoryname {
-    border-bottom: 1px dotted #ccc;
-}
-.coursebox.collapsed > .info > .coursename {
-    display: inline-block;
-    font-size: 1.25em;
-}
-.courses .coursebox.collapsed {
-    border: none;
-    border-bottom: 1px dotted #ccc;
-}
-.coursebox > .info > .coursename a::before, .coursebox > .info > .name a::before {
-    background-color: #f2f2f2;
-    border-radius: 50%;
-    color: #555;
-    content: "\f090";
-    display: block;
-    float: left;
-    font-family: FontAwesome;
-    height: 1.35em;
-    line-height: 1.35em;
-    margin-right: 0.5em;
-    margin-top: -0.2em;
-    padding-top: 0.1em;
-    text-align: center;
-    width: 1.5em;
-}
-.course_category_tree.category-browse-0 {
-    margin-bottom: 25px;
-}
-
-/*================================================== * 
-book module
-=====================================================*/
-.navtop.navtext .chaptername span.arrow, .navbottom.navtext .chaptername span.arrow {
-    display: none;
-}
-.navtext.navtop, .navtext.navbottom {
-    background: #f9f9f9 url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN89B8AAskB44g04okAAAAASUVORK5CYII=") repeat-y scroll center top;
-    border-bottom: 1px solid #e2e2e2;
-    border-top: 1px solid #e2e2e2;
-    line-height: 40px;
-}
-.navtext.navtop a.booknext:after, .navtext.navbottom a.booknext:after {
-    content: "\f105";
-    font-family: fontawesome;
-    font-size:1.1em;
-    font-weight: bold;
-    color: #555;
-    margin:0 10px;
-}
-.navtext.navtop a.bookexit, .navtext.navbottom a.bookexit {
-    margin:0 10px;
-}
-.navtext.navtop a.bookprev:before, .navtext.navbottom a.bookprev:before {
-    content: "\f104";
-    font-family: fontawesome;
-    font-size:1.1em;
-    font-weight: bold;
-    color: rgba(31, 102, 135, 1);
-    margin:0 10px;
-}
-.path-mod-book #region-main > div > h2 {
-    font-size: 32px;
-    line-height: 32px;
-    margin-bottom: 0;
-    margin-right: 10px;
-}
-.path-mod-book .generalbox.book_content > h3 {
-    background: rgba(0, 0, 0, 0) url([[pix:theme|bg/block-divider]]) repeat-x scroll left bottom;
-    color: #999;
-    font-size: 24px;
-    line-height: 40px;
-    margin-bottom: 25px;
-	margin-top: 0;
-}
-.path-mod-book .generalbox.book_content > h3:after {
-    background: [[setting:maincolor]] none repeat scroll 0 0;
-    content: "";
-    display: block;
-    height: 3px;
-    margin-top: 15px;
-    max-width: 75px;
-    padding: 0;
-    width: 50%;
-}
-.path-mod-book .navtop {
-    display: none;
-}
-.navimages > a > img {
-    background: [[setting:maincolor]];
-    padding: 6px !important;
-}
-
-/*================================================== * 
-page module
-=====================================================*/
-.path-mod-page #region-main > div > h2 {
-    background: rgba(0, 0, 0, 0) url([[pix:theme|bg/block-divider]]) repeat-x scroll left bottom;
-    font-size: 32px;
-    line-height: 32px;
-    margin-bottom: 15px;
-}
-.path-mod-page #region-main > div > h2:after {
-    background: [[setting:maincolor]] none repeat scroll 0 0;
-    content: "";
-    display: block;
-    height: 3px;
-    margin-top: 15px;
-    max-width: 75px;
-    padding: 0;
-    width: 50%;
+.fa-chevron-circle-left:before, .fa-chevron-circle-right:before {
+    color: [[setting:maincolor]];
+    font-size: 1.5em;
 }
 
 /*================================================== * 
@@ -971,13 +754,6 @@ body#page-mod-assign-grader {
 @media (min-width:481px) and (max-width: 767px) {
 body#page-mod-assign-grader, body#page-mod-assign-grader #page {padding:0;}
 .path-mod-assign [data-region="grading-navigation-panel"] {background: #fff none repeat scroll 0 0; margin: 0 auto; width: 98%;}
-}
-.submissionstatustable .submissionstatussubmitted, .submissionstatustable .earlysubmission , .submissionstatustable .submissionstatus, .submissionstatustable .submissiongraded {
-    margin: 3px 0;
-    padding: 4px;
-}
-.path-mod-assign div[data-region="assignment-info"] {
-    line-height: 1.5em;
 }
 
 /* =========================================================== *
@@ -1467,18 +1243,6 @@ Quiz
 .que .info > div.questionflag, .que .info > div.editquestion {
     font-weight: bold;
 }
-.path-mod-quiz #mod_quiz_navblock span.qnbutton, .path-mod-quiz #mod_quiz_navblock .qnbutton {
-	color: #555;
-}
-.path-mod-quiz #mod_quiz_navblock .allquestionsononepage .qnbutton.thispage .thispageholder {
-    border-color: #ccc;
-    border-radius: 2px;
-    border-width: 1px;
-}
-.path-mod-quiz #mod_quiz_navblock .qnbutton.thispage .thispageholder {
-    border-width: 2px;
-    border-color: #8BC33D;
-}
 
 /* =========================================================== *
 Blockicons by Shaun Daubney (theme_aardvark)
@@ -1551,8 +1315,8 @@ Blockicons by Shaun Daubney (theme_aardvark)
     content:"\f0eb";
 }
 .block_book_toc .header .title h2:before {
-    background-color: #76b900;
-    content: "\f097";
+    background-color: #76B900;
+    content:"\f02d";
 }
 .block_participants .header .title h2:before,
 .block_online_users .header .title h2:before {
@@ -1887,7 +1651,7 @@ login
 }
 .loginbox.clearfix.onecolumn {
     margin: 0 auto;
-    max-width: 520px;
+    width: 520px;
 }
 
 /* =========================================================== *
@@ -2016,13 +1780,8 @@ Bootstrap
 /* =========================================================== *
 Responsive & General Adjustments
 ============================================================== */
-#scorm_toc {
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
-.carousel.slide.no-indicators .carousel-indicators li {
-    background-color: transparent !important;
+.ctopics .section-title {
+    color: inherit;
 }
 .course-content ul.ctopics li.section .content .toggle, .course-content ul.ctopics li.section .content.sectionhidden {
     border-radius: 2px !important;
@@ -2148,19 +1907,6 @@ body#page-mod-feedback-print #page {
 	#block-login {padding: 0; margin: 0 auto; width: 205px;}
 	#block-login input#inputName {display: block; margin-bottom: 5px; width: 201px;}
 }
-@media(max-width:1150px){
-	.path-admin-theme #admindeviceselector td img {max-width: 400px;}
-}
-@media(max-width:1000px){
-	.path-admin-theme #admindeviceselector td img {max-width: 300px;}
-}
-@media(max-width:850px){
-.path-admin-theme #admindeviceselector td img {max-width: 200px;}
-}
-@media(max-width:600px){
-	.path-admin-theme #admindeviceselector td img {max-width: 200px;}
-	.path-admin-theme #admindeviceselector td h3 {font-size: 14px;}
-}
 
 /*================================================== * 
 Additional CSS for RTL Support
@@ -2187,6 +1933,10 @@ Additional CSS for RTL Support
 .dir-rtl #loggedin-user {
     float: left;
 }
+.dir-rtl .row-fluid .span6.login-header {
+    margin-left: 0;
+    width: 51.282%;
+}
 .dir-rtl #block-login input[type="text"], .dir-rtl #block-login input[type="password"] {
     padding: 0 40px 0 2px;
 }
@@ -2200,7 +1950,7 @@ Additional CSS for RTL Support
     padding-left: 6px;
 }
 .dir-rtl .content h3.sectionname {
-    border-color: #eee [[setting:maincolor]] #eee #eee;
+    border-color: #eee #f9bf3b #eee #eee;  <--- maincolor!!!
     border-width: 1px 3px 1px 1px;
     padding: 8px 4px 8px 0;
 }
