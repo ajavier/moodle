@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -20,14 +19,14 @@
  *
  * @package    format_buttons
  * @author     Rodrigo Brandão (rodrigobrandao.com.br)
- * @copyright  2016 Rodrigo Brandão
+ * @copyright  2017 Rodrigo Brandão
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->requires = 2014101000; /* moodle 2.8.0 */
+$plugin->requires = 2013111800; /* moodle 2.6.0 */
 $plugin->component = 'format_buttons';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '(Build: 2016091100)';
-$plugin->version = 2016091100;
+$plugin->release = '(Build: 2017071000)';
+$plugin->version = 2017071000;

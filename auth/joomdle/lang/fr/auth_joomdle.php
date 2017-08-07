@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @package    auth_joomdle
+ * @copyright  2009 Qontori Pte Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 $string['auth_joomdletitle'] = 'Joomdle';
 $string['auth_joomdledescription'] = 'Cette methode utilise les Service Web de Joomdle pour definir si une sessions est valide ou pas dans joomla.\nVersion 0.24';
@@ -22,6 +26,3 @@ $string['auth_joomla_enrol_parents'] = 'Abonner les parents dans les cours';
 $string['auth_joomla_enrol_parents_description'] = 'Abonner automatiquement les parents dans les cours enfants';
 $string['auth_joomla_parent_role_id'] = 'ID du mod&egrav;le Parent';
 $string['auth_joomla_parent_role_id_description'] = 'Mod&egrav;le ID du mod&egrav;le parent';
-
-
-?>

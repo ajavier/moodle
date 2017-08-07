@@ -1,9 +1,13 @@
-<?php 
+<?php
+/**
+ * @package    auth_joomdle
+ * @copyright  2009 Qontori Pte Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 
 $string['pluginname'] = 'Joomdle';
-$string['pluginame_desc'] = 'This method uses Joomdle web services to know whether a user has a valid session in Joomla.Version 1.0.8';
-$string['auth_joomdledescription'] = 'This method uses Joomdle web services to know whether a user has a valid session in Joomla.Version 1.0.8';
+$string['auth_joomdledescription'] = 'This method uses Joomdle web services to know whether a user has a valid session in Joomla, version 1.1.3';
 
 $string['joomla_sp_name'] = 'Joomdle';
 $string['joomla_sp_description'] = 'Services for Joomla Integration<br>';
@@ -45,4 +49,3 @@ $string['auth_joomla_joomla_auth_token'] = 'Joomdle\'s Joomla  authentication to
 $string['auth_joomla_joomla_auth_token_description'] = 'Auth token as configured in Joomdle in Joomla';
 $string['auth_joomla_logout_redirect_to_joomla'] = 'Redirect to Joomla on Moodle logout';
 $string['auth_joomla_logout_redirect_to_joomla_description'] = 'Redirect to Joomla on Moodle logout';
-?>

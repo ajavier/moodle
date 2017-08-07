@@ -86,7 +86,7 @@ function lambda_set_pagewidth1($css, $pagewidth) {
 function lambda_set_pagewidth2($css, $pagewidth) {
     $tag = '[[setting:pagewidth_wide]]';
     if ($pagewidth == "100") {
-        $replacement = 'body {background:none repeat scroll 0 0 #fff;padding-top:0;} @media(max-width:767px){body {padding-left: 0; padding-right: 0;} #page {padding: 10px 0;}} #wrapper {max-width:100%;width:100%;} #page-header {margin:0 auto;max-width:90%;} .container-fluid {padding: 0; max-width:100%} .navbar {background: none repeat scroll 0 0 [[setting:menufirstlevelcolor]];padding: 0;} .navbar-inner {margin: 0 auto; max-width: 90%;} .navbar .brand {margin-left:0;} .navbar #search {margin-right:0;} .pagelayout-frontpage header.navbar + .container-fluid > img.lambda-shadow {display: none;} .camera_wrap {margin-top: -10px;} #page-content.row-fluid {margin: 0 auto; max-width: 90%;} #page-footer .row-fluid {margin: 0 auto; max-width: 90%;} .spotlight-full {margin-left: -5.8% !important; margin-right: -5.8% !important;} .socials-header .social_icons.pull-right {padding-right:10%;} .socials-header .social_contact {padding-left:10%;}';
+        $replacement = 'body {background:none repeat scroll 0 0 #fff;padding-top:0;} @media(max-width:767px){body {padding-left: 0; padding-right: 0;} #page {padding: 10px 0;}} #wrapper {max-width:100%;width:100%;} #page-header {margin:0 auto;max-width:90%;} .container-fluid {padding: 0; max-width:100%} .navbar {background: none repeat scroll 0 0 [[setting:menufirstlevelcolor]];padding: 0;} .navbar-inner {margin: 0 auto; max-width: 90%;} .navbar .brand {margin-left:0;} .navbar #search {margin-right:0;} .pagelayout-frontpage header.navbar + .container-fluid > img.lambda-shadow {display: none;} .camera_wrap {margin-top: -10px;} #page {margin: 0 auto; max-width: 90%;} #page-footer .row-fluid {margin: 0 auto; max-width: 90%;} .spotlight-full {margin-left: -5.8% !important; margin-right: -5.8% !important;} .socials-header .social_icons.pull-right {padding-right:10%;} .socials-header .social_contact {padding-left:10%;}';
 		$css = str_replace($tag, $replacement, $css);
 	}
 	else { 
@@ -132,67 +132,57 @@ function theme_lambda_process_css($css, $theme) {
     // Set the Fonts.
     if ($theme->settings->font_body ==1) {
         $bodyfont = 'Open Sans';
-        $bodysize = '13px';
     } else if ($theme->settings->font_body ==2) {
         $bodyfont = 'Arimo';
-        $bodysize = '14px';
     } else if ($theme->settings->font_body ==3) {
         $bodyfont = 'Arvo';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==4) {
         $bodyfont = 'Bree Serif';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==5) {
         $bodyfont = 'Cabin';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==6) {
         $bodyfont = 'Cantata One';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==7) {
         $bodyfont = 'Crimson Text';
-        $bodysize = '14px';
 	} else if ($theme->settings->font_body ==8) {
         $bodyfont = 'Droid Sans';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==9) {
         $bodyfont = 'Droid Serif';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==10) {
         $bodyfont = 'Gudea';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==11) {
         $bodyfont = 'Imprima';
-        $bodysize = '14px';
 	} else if ($theme->settings->font_body ==12) {
         $bodyfont = 'Lekton';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==13) {
         $bodyfont = 'Nunito';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==14) {
         $bodyfont = 'Montserrat';
-        $bodysize = '12px';
 	} else if ($theme->settings->font_body ==15) {
         $bodyfont = 'Playfair Display';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==16) {
         $bodyfont = 'Pontano Sans';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==17) {
         $bodyfont = 'PT Sans';
-        $bodysize = '14px';
 	} else if ($theme->settings->font_body ==18) {
         $bodyfont = 'Raleway';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==19) {
         $bodyfont = 'Ubuntu';
-        $bodysize = '13px';
 	} else if ($theme->settings->font_body ==20) {
         $bodyfont = 'Vollkorn';
-        $bodysize = '14px';
 	} else if ($theme->settings->font_body ==21) {
-        $bodyfont = 'Work Sans';
-        $bodysize = '14px';}
+        $bodyfont = 'Work Sans';}
+	
+	if ($theme->settings->font_body_size ==1) {
+        $bodysize = '12px';
+    } else if ($theme->settings->font_body_size ==2) {
+        $bodysize = '13px';
+	} else if ($theme->settings->font_body_size ==3) {
+        $bodysize = '14px';
+	} else if ($theme->settings->font_body_size ==4) {
+        $bodysize = '15px';
+	} else if ($theme->settings->font_body_size ==5) {
+        $bodysize = '16px';}
 		
 	if ($theme->settings->font_heading ==1) {
         $headingfont = 'Open Sans';

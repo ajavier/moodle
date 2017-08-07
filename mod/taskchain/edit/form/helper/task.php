@@ -49,7 +49,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     protected $sections = array(
         'general'    => array('sortorder', 'edit', 'defaultrecord', 'selectrecord', 'name'),
         'tasks'      => array('sourcefile', 'sourcetype', 'sourcelocation', 'configfile', 'configlocation', 'addtype', 'tasknames'),
-        'display'    => array('outputformat', 'navigation', 'title', 'stopbutton', 'stoptext', 'allowpaste', 'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl'),
+        'display'    => array('outputformat', 'navigation', 'title', 'titletext', 'stopbutton', 'stoptext', 'allowpaste', 'usefilters', 'useglossary', 'usemediafilter', 'studentfeedback', 'studentfeedbackurl'),
         'time'       => array('timeopen', 'timeclose', 'timelimit', 'delay1', 'delay2', 'delay3'),
         'attempts'   => array('attemptlimit', 'allowresume'),
         'security'   => array('password', 'subnet'),
@@ -84,6 +84,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         'titleprependchainname' => mod_taskchain::NO,
         'titleappendsortorder'  => mod_taskchain::NO,
         'title'           => mod_taskchain::TEXTSOURCE_FILE,
+        'titletext'       => '',
         'stopbutton'      => mod_taskchain::NO,
         'stoptext'        => '',
         'allowpaste'      => mod_taskchain::NO,
@@ -282,10 +283,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name = $this->get_fieldname($field);
         $label = get_string($field, 'mod_taskchain');
 
+        $field_text    = $field.'text';
         $field_source  = $field.'source';
         $field_prepend = $field.'prependchainname';
         $field_append  = $field.'appendsortorder';
 
+        $name_text     = $this->get_fieldname($field_text);
         $name_source   = $this->get_fieldname($field_source);
         $name_prepend  = $this->get_fieldname($field_prepend);
         $name_append   = $this->get_fieldname($field_append);
@@ -293,20 +296,38 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
 
         $elements = array();
         $elements[] = $this->mform->createElement('select',   $name_source,  '', taskchain_available::titles_list());
+        $elements[] = $this->mform->createElement('text',     $name_text,    '', array('size' => '20'));
+        $elements[] = $this->mform->createElement('static',   '',            '', html_writer::empty_tag('br'));
         $elements[] = $this->mform->createElement('checkbox', $name_prepend, '', get_string($field_prepend, 'mod_taskchain'));
+        $elements[] = $this->mform->createElement('static',   '',            '', html_writer::empty_tag('br'));
         $elements[] = $this->mform->createElement('checkbox', $name_append,  '', get_string($field_append,  'mod_taskchain'));
+        
 
-        $this->mform->addGroup($elements, $name_elements, $label, html_writer::empty_tag('br'), false);
-        $this->add_helpbutton($name_elements, $field, 'taskchain');
+        $this->mform->addGroup($elements, $name_elements, $label, ' ', false);
+        $this->add_helpbutton($name_elements, $field, 'mod_taskchain');
         $this->mform->setAdvanced($name_elements);
 
+        $this->mform->setType($name_text,   PARAM_TEXT);
         $this->mform->setType($name_source,  PARAM_INT);
         $this->mform->setType($name_prepend, PARAM_INT);
         $this->mform->setType($name_append,  PARAM_INT);
 
+        $this->mform->setDefault($name_text,    $this->get_defaultvalue($field_text));
         $this->mform->setDefault($name_source,  $this->get_defaultvalue($field_source));
         $this->mform->setDefault($name_prepend, $this->get_defaultvalue($field_prepend));
         $this->mform->setDefault($name_append,  $this->get_defaultvalue($field_append));
+
+        $this->mform->disabledIf($name_text, $name_source, 'neq', mod_taskchain::TEXTSOURCE_SPECIFIC);
+    }
+
+    /**
+     * add_field_titletext
+     *
+     * @param string name of $field
+     * @todo Finish documenting this function
+     */
+    protected function add_field_titletext($field) {
+        // do nothing - this field was added by add_field_title($field)
     }
 
     /**
@@ -650,24 +671,24 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * fix_field_title
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_title(&$data, $field) {
+    protected function fix_field_title($data, $field) {
         $value = 0;
 
         $name = $this->get_fieldname($field.'source');
         if (isset($data->$name)) {
-            $value |= ($data->$name & mod_taskchain::TITLE_SOURCE); // 1st/2nd bits
+            $value |= ($data->$name & mod_taskchain::TITLE_SOURCE); // 1st-3rd bits
             unset($data->$name);
         }
 
         $name = $this->get_fieldname($field.'prependchainname');
         if (isset($data->$name)) {
             if ($data->$name) {
-                $value |= mod_taskchain::TITLE_CHAINNAME; // 3rd bit
+                $value |= mod_taskchain::TITLE_CHAINNAME; // 4th bit
             }
             unset($data->$name);
         }
@@ -675,7 +696,7 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
         $name = $this->get_fieldname($field.'appendsortorder');
         if (isset($data->$name)) {
             if ($data->$name) {
-                $value |= mod_taskchain::TITLE_SORTORDER; // 4th bit
+                $value |= mod_taskchain::TITLE_SORTORDER; // 5th bit
             }
             unset($data->$name);
         }
@@ -687,12 +708,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * fix_field_stopbutton
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_stopbutton(&$data, $field) {
+    protected function fix_field_stopbutton($data, $field) {
         $name  = $this->get_fieldname($field);
         $name_yesno = $this->get_fieldname($field.'yesno');
         $name_type  = $this->get_fieldname($field.'type');
@@ -724,36 +745,36 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * fix_field_timelimit
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_timelimit(&$data, $field) {
+    protected function fix_field_timelimit($data, $field) {
         $this->fix_template_timelist($data, $field);
     }
 
     /**
      * fix_field_delay3
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_delay3(&$data, $field) {
+    protected function fix_field_delay3($data, $field) {
         $this->fix_template_timelist($data, $field);
     }
 
     /**
      * fix_template_timelist
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_template_timelist(&$data, $field) {
+    protected function fix_template_timelist($data, $field) {
         $name = $this->get_fieldname($field);
         $name_options = $this->get_fieldname($field.'options');
         switch ($data->$name_options) {
@@ -772,12 +793,12 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * fix_field_reviewoptions
      *
-     * @param array $data (passed by reference)
+     * @param stdClass $data (passed by reference)
      * @param string name of $field
      * @return void may modify $data
      * @todo Finish documenting this function
      */
-    protected function fix_field_reviewoptions(&$data, $field) {
+    protected function fix_field_reviewoptions($data, $field) {
         $name = $this->get_fieldname($field);
         $data->$name = 0;
 
@@ -853,7 +874,8 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      * @todo Finish documenting this function
      */
     protected function format_fieldvalue_title($field, $value) {
-        $title = $this->format_templatevalue_list($field, ($value & mod_taskchain::TITLE_SOURCE));
+        $title = ($value & mod_taskchain::TITLE_SOURCE);
+        $title = $this->format_templatevalue_list($field, $title);
         if ($value & mod_taskchain::TITLE_CHAINNAME) {
             $title = get_string('taskchainname', 'mod_taskchain').': '.$title;
         }
@@ -1100,22 +1122,22 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
     /**
      * get_datavalue_preconditions
      *
-     * @param stdclass $data (passed by reference) recently submitted form $data or db record
+     * @param stdClass $data (passed by reference) recently submitted form $data or db record
      * @param string name of required user preference $field
      * @todo Finish documenting this function
      */
-    protected function get_datavalue_preconditions(&$data, $field, $default=0) {
+    protected function get_datavalue_preconditions($data, $field, $default=0) {
         return (empty($data->id) ? 0 : $data->id);
     }
 
     /**
      * get_datavalue_postconditions
      *
-     * @param object $data (passed by reference) recently submitted form $data
+     * @param stdClass $data (passed by reference) recently submitted form $data
      * @param string name of required user preference $field
      * @todo Finish documenting this function
      */
-    protected function get_datavalue_postconditions(&$data, $field, $default=0) {
+    protected function get_datavalue_postconditions($data, $field, $default=0) {
         return (isset($data->id) ? $data->id : $default);
     }
 
@@ -1192,16 +1214,6 @@ class taskchain_form_helper_task extends taskchain_form_helper_record {
      */
     public function get_helpicon_reviewoptions() {
         return '';
-    }
-
-    /**
-     * get_helpicon_stoptext
-     *
-     * @uses $OUTPUT
-     */
-    public function get_helpicon_stoptext() {
-        global $OUTPUT;
-        return ' '.$OUTPUT->help_icon('stopbutton', 'taskchain');
     }
 
     /**

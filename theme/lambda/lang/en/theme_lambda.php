@@ -37,7 +37,7 @@ $string['choosereadme'] = '
 </div>
 <h4>Theme Summary</h4>
 <div style="color: #888; text-transform: uppercase; margin-bottom:20px;">
-<p>Compatibility: Moodle 2.5/2.6/2.7/2.8/2.9/3.0/3.1/3.2<br />Theme Version: 1.56<br />Parent theme: Bootstrapbase by Bas Brands<br />Built on: Essential by Julian Ridden</p>
+<p>Compatibility: Moodle 2.5/2.6/2.7/2.8/2.9/3.0/3.1/3.2<br />Theme Version: 1.58<br />Parent theme: Bootstrapbase by Bas Brands<br />Built on: Essential by Julian Ridden</p>
 </div>
 <hr />
 <p style="text-align:center;"><img class="img-polaroid" src="lambda/pix/redPIthemes.jpg" /></p>';
@@ -141,6 +141,8 @@ $string['fontselect_heading'] = 'Font Selector - Headings';
 $string['fontselectdesc_heading'] = 'Choose from the list of availble fonts.';
 $string['fontselect_body'] = 'Font Selector - Body';
 $string['fontselectdesc_body'] = 'Choose from the list of availble fonts.';
+$string['font_body_size'] = 'Body Text Size';
+$string['font_body_size_desc'] = 'Adjust the global font size for the body text.';
 $string['font_languages'] = 'Additional character sets';
 $string['font_languages_desc'] = 'Some of the fonts in the Google Font Directory support additional character sets for different languages. Using many character sets can slow down your Moodle, so only select the character sets that you actually need.<br /><strong>Please note: </strong>The Google Font Directory does not provide each additional character sets for every font. In case of doubt you should select <i>Open Sans</i>.';
 $string['font_languages_latinext'] = 'Latin Extended';

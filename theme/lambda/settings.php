@@ -438,6 +438,21 @@ $ADMIN->add('themes', new admin_category('theme_lambda', 'Theme-Lambda'));
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $temp->add($setting);
+
+	$name = 'theme_lambda/font_body_size';
+    $title = get_string('font_body_size' , 'theme_lambda');
+    $description = get_string('font_body_size_desc', 'theme_lambda');
+    $default = '2';
+    $choices = array(
+    	'1'=>'12px',
+		'2'=>'13px',
+		'3'=>'14px',
+		'4'=>'15px',
+		'5'=>'16px');
+	 			
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $temp->add($setting);
 	
     $name = 'theme_lambda/font_heading';
     $title = get_string('fontselect_heading' , 'theme_lambda');

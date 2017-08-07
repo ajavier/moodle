@@ -40,17 +40,17 @@ require_once("$CFG->libdir/filebrowser/file_browser.php");
  */
 function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null) {
     global $DB, $CFG, $USER;
-    // relative path must start with '/'
+    // Relative path must start with '/'.
     if (!$relativepath) {
         print_error('invalidargorconf');
     } else if ($relativepath[0] != '/') {
         print_error('pathdoesnotstartslash');
     }
 
-    // extract relative path components
+    // Extract relative path components.
     $args = explode('/', ltrim($relativepath, '/'));
 
-    if (count($args) < 3) { // always at least context, component and filearea
+    if (count($args) < 3) { // Always at least context, component and filearea.
         print_error('invalidarguments');
     }
 
@@ -62,9 +62,8 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
     $fs = get_file_storage();
 
-    // ========================================================================================================================
     if ($component === 'blog') {
-        // Blog file serving
+        // Blog file serving.
         if ($context->contextlevel != CONTEXT_SYSTEM) {
             send_file_not_found();
         }
@@ -77,7 +76,7 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
         }
 
         $entryid = (int)array_shift($args);
-        if (!$entry = $DB->get_record('post', array('module'=>'blog', 'id'=>$entryid))) {
+        if (!$entry = $DB->get_record('post', array('module' => 'blog', 'id' => $entryid))) {
             send_file_not_found();
         }
         if ($CFG->bloglevel < BLOG_GLOBAL_LEVEL) {
@@ -99,7 +98,6 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
         } else if ($entry->publishstate === 'site') {
             require_login();
-            //ok
         } else if ($entry->publishstate === 'draft') {
             require_login();
             if ($USER->id != $entry->userid) {
@@ -114,12 +112,11 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             send_file_not_found();
         }
 
-        send_stored_file($file, 10*60, 0, true, array('preview' => $preview)); // download MUST be forced - security!
+        send_stored_file($file, 10 * 60, 0, true, array('preview' => $preview)); // Rownload MUST be forced - security!
 
-    // ========================================================================================================================
     } else if ($component === 'grade') {
         if (($filearea === 'outcome' or $filearea === 'scale') and $context->contextlevel == CONTEXT_SYSTEM) {
-            // Global gradebook files
+            // Global gradebook files.
             if ($CFG->forcelogin) {
                 require_login();
             }
@@ -131,10 +128,9 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else if ($filearea === 'feedback' and $context->contextlevel == CONTEXT_COURSE) {
-            //TODO: nobody implemented this yet in grade edit form!!
             send_file_not_found();
 
             if ($CFG->forcelogin || $course->id != SITEID) {
@@ -148,16 +144,15 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
         } else {
             send_file_not_found();
         }
 
-    // ========================================================================================================================
     } else if ($component === 'tag') {
         if ($filearea === 'description' and $context->contextlevel == CONTEXT_SYSTEM) {
 
-            // All tag descriptions are going to be public but we still need to respect forcelogin
+            // All tag descriptions are going to be public but we still need to respect forcelogin.
             if ($CFG->forcelogin) {
                 require_login();
             }
@@ -169,12 +164,11 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, true, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, true, array('preview' => $preview));
 
         } else {
             send_file_not_found();
         }
-    // ========================================================================================================================
     } else if ($component === 'badges') {
         require_once($CFG->libdir . '/badgeslib.php');
 
@@ -191,96 +185,97 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             }
 
             \core\session\manager::write_close();
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
         } else if ($filearea === 'userbadge'  and $context->contextlevel == CONTEXT_USER) {
             if (!$file = $fs->get_file($context->id, 'badges', 'userbadge', $badge->id, '/', $filename.'.png')) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close();
-            send_stored_file($file, 60*60, 0, true, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, true, array('preview' => $preview));
         }
-    // ========================================================================================================================
     } else if ($component === 'calendar') {
         if ($filearea === 'event_description'  and $context->contextlevel == CONTEXT_SYSTEM) {
 
-            // All events here are public the one requirement is that we respect forcelogin
+            // All events here are public the one requirement is that we respect forcelogin.
             if ($CFG->forcelogin) {
                 require_login();
             }
 
-            // Get the event if from the args array
+            // Get the event if from the args array.
             $eventid = array_shift($args);
 
-            // Load the event from the database
-            if (!$event = $DB->get_record('event', array('id'=>(int)$eventid, 'eventtype'=>'site'))) {
+            // Load the event from the database.
+            if (!$event = $DB->get_record('event', array('id' => (int)$eventid, 'eventtype' => 'site'))) {
                 send_file_not_found();
             }
 
-            // Get the file and serve if successful
+            // Get the file and serve if successful.
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-            if (!$file = $fs->get_file($context->id, $component, $filearea, $eventid, $filepath, $filename) or $file->is_directory()) {
+            if (!$file = $fs->get_file($context->id, $component, $filearea, $eventid, $filepath, $filename)
+                    or $file->is_directory()) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_USER) {
 
-            // Must be logged in, if they are not then they obviously can't be this user
+            // Must be logged in, if they are not then they obviously can't be this user.
             require_login();
 
-            // Don't want guests here, potentially saves a DB call
+            // Don't want guests here, potentially saves a DB call.
             if (isguestuser()) {
                 send_file_not_found();
             }
 
-            // Get the event if from the args array
+            // Get the event if from the args array.
             $eventid = array_shift($args);
 
-            // Load the event from the database - user id must match
-            if (!$event = $DB->get_record('event', array('id'=>(int)$eventid, 'userid'=>$USER->id, 'eventtype'=>'user'))) {
+            // Load the event from the database - user id must match.
+            if (!$event = $DB->get_record('event', array('id' => (int)$eventid,
+                            'userid' => $USER->id, 'eventtype' => 'user'))) {
                 send_file_not_found();
             }
 
-            // Get the file and serve if successful
+            // Get the file and serve if successful.
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-            if (!$file = $fs->get_file($context->id, $component, $filearea, $eventid, $filepath, $filename) or $file->is_directory()) {
+            if (!$file = $fs->get_file($context->id, $component, $filearea, $eventid, $filepath, $filename)
+                    or $file->is_directory()) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_COURSE) {
 
-            // Respect forcelogin and require login unless this is the site.... it probably
-            // should NEVER be the site
+            // Respect forcelogin and require login unless this is the site....
+            // It probably should NEVER be the site.
             if ($CFG->forcelogin || $course->id != SITEID) {
                 require_login($course);
             }
 
             // Must be able to at least view the course. This does not apply to the front page.
             if ($course->id != SITEID && (!is_enrolled($context)) && (!is_viewing($context))) {
-                //TODO: hmm, do we really want to block guests here?
                 send_file_not_found();
             }
 
-            // Get the event id
+            // Get the event id.
             $eventid = array_shift($args);
 
-            // Load the event from the database we need to check whether it is
-            // a) valid course event
-            // b) a group event
-            // Group events use the course context (there is no group context)
-            if (!$event = $DB->get_record('event', array('id'=>(int)$eventid, 'courseid'=>$course->id))) {
+            // Load the event from the database we need to check whether it is...
+            // A) valid course event.
+            // B) a group event.
+            // Group events use the course context (there is no group context).
+            if (!$event = $DB->get_record('event', array('id' => (int)$eventid, 'courseid' => $course->id))) {
                 send_file_not_found();
             }
 
-            // If its a group event require either membership of view all groups capability
+            // If its a group event require either membership of view all groups capability.
             if ($event->eventtype === 'group') {
                 if (!has_capability('moodle/site:accessallgroups', $context) && !groups_is_member($event->groupid, $USER->id)) {
                     send_file_not_found();
@@ -292,21 +287,21 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
                 send_file_not_found();
             }
 
-            // If we get this far we can serve the file
+            // If we get this far we can serve the file.
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-            if (!$file = $fs->get_file($context->id, $component, $filearea, $eventid, $filepath, $filename) or $file->is_directory()) {
+            if (!$file = $fs->get_file($context->id, $component, $filearea, $eventid, $filepath, $filename)
+                    or $file->is_directory()) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else {
             send_file_not_found();
         }
 
-    // ========================================================================================================================
     } else if ($component === 'user') {
         if ($filearea === 'icon' and $context->contextlevel == CONTEXT_USER) {
             if (count($args) == 1) {
@@ -317,24 +312,23 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
                 $filename = array_shift($args);
             }
 
-            // fix file name automatically
+            // Fix file name automatically.
             if ($filename !== 'f1' and $filename !== 'f2' and $filename !== 'f3') {
                 $filename = 'f1';
             }
 
             if ((!empty($CFG->forcelogin) and !isloggedin()) ||
                     (!empty($CFG->forceloginforprofileimage) && (!isloggedin() || isguestuser()))) {
-                // protect images if login required and not logged in;
-                // also if login is required for profile images and is not logged in or guest
-                // do not use require_login() because it is expensive and not suitable here anyway
+                // Protect images if login required and not logged in.
+                // Also if login is required for profile images and is not logged in or guest.
+                // Do not use require_login() because it is expensive and not suitable here anyway.
                 $theme = theme_config::load($themename);
-                redirect($theme->pix_url('u/'.$filename, 'moodle')); // intentionally not cached
+                redirect($theme->pix_url('u/'.$filename, 'moodle')); // Intentionally not cached.
             }
 
             if (!$file = $fs->get_file($context->id, 'user', 'icon', 0, '/', $filename.'.png')) {
                 if (!$file = $fs->get_file($context->id, 'user', 'icon', 0, '/', $filename.'.jpg')) {
                     if ($filename === 'f3') {
-                        // f3 512x512px was introduced in 2.3, there might be only the smaller version.
                         if (!$file = $fs->get_file($context->id, 'user', 'icon', 0, '/', 'f1.png')) {
                             $file = $fs->get_file($context->id, 'user', 'icon', 0, '/', 'f1.jpg');
                         }
@@ -342,19 +336,20 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
                 }
             }
             if (!$file) {
-                // bad reference - try to prevent future retries as hard as possible!
-                if ($user = $DB->get_record('user', array('id'=>$context->instanceid), 'id, picture')) {
+                // Bad reference - try to prevent future retries as hard as possible!
+                if ($user = $DB->get_record('user', array('id' => $context->instanceid), 'id, picture')) {
                     if ($user->picture > 0) {
-                        $DB->set_field('user', 'picture', 0, array('id'=>$user->id));
+                        $DB->set_field('user', 'picture', 0, array('id' => $user->id));
                     }
                 }
-                // no redirect here because it is not cached
+                // No redirect here because it is not cached.
                 $theme = theme_config::load($themename);
                 $imagefile = $theme->resolve_image_location('u/'.$filename, 'moodle', null);
-                send_file($imagefile, basename($imagefile), 60*60*24*14);
+                send_file($imagefile, basename($imagefile), 60 * 60 * 24 * 14);
             }
 
-            send_stored_file($file, 60*60*24*365, 0, false, array('preview' => $preview)); // enable long caching, there are many images on each page
+            // Enable long caching, there are many images on each page.
+            send_stored_file($file, 60 * 60 * 24 * 365, 0, false, array('preview' => $preview));
 
         } else if ($filearea === 'private' and $context->contextlevel == CONTEXT_USER) {
             require_login();
@@ -385,7 +380,7 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             $userid = $context->instanceid;
 
             if ($USER->id == $userid) {
-                // always can access own
+                // Always can access own.
 
             } else if (!empty($CFG->forceloginforprofiles)) {
                 require_login();
@@ -394,7 +389,7 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
                     send_file_not_found();
                 }
 
-                // we allow access to site profile of all course contacts (usually teachers)
+                // We allow access to site profile of all course contacts (usually teachers).
                 if (!has_coursecontact_role($userid) && !has_capability('moodle/user:viewdetails', $context)) {
                     send_file_not_found();
                 }
@@ -421,7 +416,7 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 0, 0, true, array('preview' => $preview)); // must force download - security!
+            send_stored_file($file, 0, 0, true, array('preview' => $preview)); // Must force download - security!
 
         } else if ($filearea === 'profile' and $context->contextlevel == CONTEXT_COURSE) {
             $userid = (int)array_shift($args);
@@ -437,17 +432,18 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
                     print_error('noguest');
                 }
 
-                //TODO: review this logic of user profile access prevention
                 if (!has_coursecontact_role($userid) and !has_capability('moodle/user:viewdetails', $usercontext)) {
                     print_error('usernotavailable');
                 }
-                if (!has_capability('moodle/user:viewdetails', $context) && !has_capability('moodle/user:viewdetails', $usercontext)) {
+                if (!has_capability('moodle/user:viewdetails', $context) &&
+                        !has_capability('moodle/user:viewdetails', $usercontext)) {
                     print_error('cannotviewprofile');
                 }
                 if (!is_enrolled($context, $userid)) {
                     print_error('notenrolledprofile');
                 }
-                if (groups_get_course_groupmode($course) == SEPARATEGROUPS and !has_capability('moodle/site:accessallgroups', $context)) {
+                if (groups_get_course_groupmode($course) == SEPARATEGROUPS and
+                        !has_capability('moodle/site:accessallgroups', $context)) {
                     print_error('groupnotamember');
                 }
             }
@@ -486,7 +482,6 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             send_file_not_found();
         }
 
-    // ========================================================================================================================
     } else if ($component === 'coursecat') {
         if ($context->contextlevel != CONTEXT_COURSECAT) {
             send_file_not_found();
@@ -494,32 +489,29 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
         if ($filearea === 'description') {
             if ($CFG->forcelogin) {
-                // no login necessary - unless login forced everywhere
+                // No login necessary - unless login forced everywhere.
                 require_login();
             }
 
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-            if (!$file = $fs->get_file($context->id, 'coursecat', 'description', 0, $filepath, $filename) or $file->is_directory()) {
+            if (!$file = $fs->get_file($context->id, 'coursecat', 'description', 0, $filepath, $filename)
+                    or $file->is_directory()) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
         } else {
             send_file_not_found();
         }
 
-    // ========================================================================================================================
     } else if ($component === 'course') {
         if ($context->contextlevel != CONTEXT_COURSE) {
             send_file_not_found();
         }
 
         if ($filearea === 'summary' || $filearea === 'overviewfiles') {
-            if ($CFG->forcelogin) {
-                require_login();
-            }
 
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
@@ -528,7 +520,7 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else if ($filearea === 'section') {
             if ($CFG->forcelogin) {
@@ -539,18 +531,19 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
             $sectionid = (int)array_shift($args);
 
-            if (!$section = $DB->get_record('course_sections', array('id'=>$sectionid, 'course'=>$course->id))) {
+            if (!$section = $DB->get_record('course_sections', array('id' => $sectionid, 'course' => $course->id))) {
                 send_file_not_found();
             }
 
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-            if (!$file = $fs->get_file($context->id, 'course', 'section', $sectionid, $filepath, $filename) or $file->is_directory()) {
+            if (!$file = $fs->get_file($context->id, 'course', 'section', $sectionid, $filepath, $filename)
+                    or $file->is_directory()) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else {
             send_file_not_found();
@@ -565,9 +558,10 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
         $groupid = (int)array_shift($args);
 
-        $group = $DB->get_record('groups', array('id'=>$groupid, 'courseid'=>$course->id), '*', MUST_EXIST);
-        if (($course->groupmodeforce and $course->groupmode == SEPARATEGROUPS) and !has_capability('moodle/site:accessallgroups', $context) and !groups_is_member($group->id, $USER->id)) {
-            // do not allow access to separate group info if not member or teacher
+        $group = $DB->get_record('groups', array('id' => $groupid, 'courseid' => $course->id), '*', MUST_EXIST);
+        if (($course->groupmodeforce and $course->groupmode == SEPARATEGROUPS)
+                and !has_capability('moodle/site:accessallgroups', $context) and !groups_is_member($group->id, $USER->id)) {
+            // Do not allow access to separate group info if not member or teacher.
             send_file_not_found();
         }
 
@@ -577,12 +571,13 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-            if (!$file = $fs->get_file($context->id, 'group', 'description', $group->id, $filepath, $filename) or $file->is_directory()) {
+            if (!$file = $fs->get_file($context->id, 'group', 'description', $group->id, $filepath, $filename)
+                    or $file->is_directory()) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else if ($filearea === 'icon') {
             $filename = array_pop($args);
@@ -597,7 +592,7 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, false, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, false, array('preview' => $preview));
 
         } else {
             send_file_not_found();
@@ -612,23 +607,23 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
         $groupingid = (int)array_shift($args);
 
-        // note: everybody has access to grouping desc images for now
+        // Note: everybody has access to grouping desc images for now.
         if ($filearea === 'description') {
 
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-            if (!$file = $fs->get_file($context->id, 'grouping', 'description', $groupingid, $filepath, $filename) or $file->is_directory()) {
+            if (!$file = $fs->get_file($context->id, 'grouping', 'description', $groupingid, $filepath, $filename)
+                    or $file->is_directory()) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else {
             send_file_not_found();
         }
 
-    // ========================================================================================================================
     } else if ($component === 'backup') {
         if ($filearea === 'course' and $context->contextlevel == CONTEXT_COURSE) {
             require_login($course);
@@ -651,12 +646,13 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
-            if (!$file = $fs->get_file($context->id, 'backup', 'section', $sectionid, $filepath, $filename) or $file->is_directory()) {
+            if (!$file = $fs->get_file($context->id, 'backup', 'section', $sectionid, $filepath, $filename)
+                    or $file->is_directory()) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close();
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else if ($filearea === 'activity' and $context->contextlevel == CONTEXT_MODULE) {
             require_login($course, false, $cm);
@@ -669,7 +665,7 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             }
 
             \core\session\manager::write_close();
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
 
         } else if ($filearea === 'automated' and $context->contextlevel == CONTEXT_COURSE) {
             // Backup files that were generated by the automated backup systems.
@@ -690,16 +686,14 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             send_file_not_found();
         }
 
-    // ========================================================================================================================
     } else if ($component === 'question') {
         require_once($CFG->libdir . '/questionlib.php');
         question_pluginfile_joomdle($course, $context, 'question', $filearea, $args, $forcedownload);
         send_file_not_found();
 
-    // ========================================================================================================================
     } else if ($component === 'grading') {
         if ($filearea === 'description') {
-            // files embedded into the form definition description
+            // Files embedded into the form definition description.
 
             if ($context->contextlevel == CONTEXT_SYSTEM) {
                 require_login();
@@ -730,10 +724,9 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
         }
 
-        // ========================================================================================================================
     } else if (strpos($component, 'mod_') === 0) {
         $modname = substr($component, 4);
         if (!file_exists("$CFG->dirroot/mod/$modname/lib.php")) {
@@ -743,7 +736,7 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
         if ($context->contextlevel == CONTEXT_MODULE) {
             if ($cm->modname !== $modname) {
-                // somebody tries to gain illegal access, cm type must match the component!
+                // Somebody tries to gain illegal access, cm type must match the component!
                 send_file_not_found();
             }
         }
@@ -753,50 +746,51 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
                 send_file_not_found();
             }
 
-			if ($modname != 'label') // Allow labels for all
-				require_course_login($course, true, $cm);
+            if ($modname != 'label') { // Allow labels for all.
+                require_course_login($course, true, $cm);
+            }
 
-            // all users may access it
+            // All users may access it.
             $filename = array_pop($args);
             $filepath = $args ? '/'.implode('/', $args).'/' : '/';
             if (!$file = $fs->get_file($context->id, 'mod_'.$modname, 'intro', 0, $filepath, $filename) or $file->is_directory()) {
                 send_file_not_found();
             }
 
-            // finally send the file
+            // Finally send the file.
             send_stored_file($file, null, 0, false, array('preview' => $preview));
         }
 
         $filefunction = $component.'_pluginfile';
         $filefunctionold = $modname.'_pluginfile';
         if (function_exists($filefunction)) {
-            // if the function exists, it must send the file and terminate. Whatever it returns leads to "not found"
+            // If the function exists, it must send the file and terminate. Whatever it returns leads to "not found".
             $filefunction($course, $cm, $context, $filearea, $args, $forcedownload, array('preview' => $preview));
         } else if (function_exists($filefunctionold)) {
-            // if the function exists, it must send the file and terminate. Whatever it returns leads to "not found"
+            // If the function exists, it must send the file and terminate. Whatever it returns leads to "not found".
             $filefunctionold($course, $cm, $context, $filearea, $args, $forcedownload, array('preview' => $preview));
         }
 
         send_file_not_found();
 
-    // ========================================================================================================================
     } else if (strpos($component, 'block_') === 0) {
         $blockname = substr($component, 6);
-        // note: no more class methods in blocks please, that is ....
+        // Note: no more class methods in blocks please, that is ....
         if (!file_exists("$CFG->dirroot/blocks/$blockname/lib.php")) {
             send_file_not_found();
         }
         require_once("$CFG->dirroot/blocks/$blockname/lib.php");
 
         if ($context->contextlevel == CONTEXT_BLOCK) {
-            $birecord = $DB->get_record('block_instances', array('id'=>$context->instanceid), '*',MUST_EXIST);
+            $birecord = $DB->get_record('block_instances', array('id' => $context->instanceid), '*', MUST_EXIST);
             if ($birecord->blockname !== $blockname) {
-                // somebody tries to gain illegal access, cm type must match the component!
+                // Somebody tries to gain illegal access, cm type must match the component!
                 send_file_not_found();
             }
 
-            $bprecord = $DB->get_record('block_positions', array('contextid' => $context->id, 'blockinstanceid' => $context->instanceid));
-            // User can't access file, if block is hidden or doesn't have block:view capability
+            $bprecord = $DB->get_record('block_positions', array('contextid' => $context->id,
+                        'blockinstanceid' => $context->instanceid));
+            // User can't access file, if block is hidden or doesn't have block:view capability.
             if (($bprecord && !$bprecord->visible) || !has_capability('moodle/block:view', $context)) {
                  send_file_not_found();
             }
@@ -806,19 +800,18 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
         $filefunction = $component.'_pluginfile';
         if (function_exists($filefunction)) {
-            // if the function exists, it must send the file and terminate. Whatever it returns leads to "not found"
+            // If the function exists, it must send the file and terminate. Whatever it returns leads to "not found".
             $filefunction($course, $birecord, $context, $filearea, $args, $forcedownload, array('preview' => $preview));
         }
 
         send_file_not_found();
 
-    // ========================================================================================================================
     } else if (strpos($component, '_') === false) {
-        // all core subsystems have to be specified above, no more guessing here!
+        // All core subsystems have to be specified above, no more guessing here!
         send_file_not_found();
 
     } else {
-        // try to serve general plugin file in arbitrary context
+        // Try to serve general plugin file in arbitrary context.
         $dir = core_component::get_component_directory($component);
         if (!file_exists("$dir/lib.php")) {
             send_file_not_found();
@@ -827,7 +820,7 @@ function joomdle_file_pluginfile($relativepath, $forcedownload, $preview = null)
 
         $filefunction = $component.'_pluginfile';
         if (function_exists($filefunction)) {
-            // if the function exists, it must send the file and terminate. Whatever it returns leads to "not found"
+            // If the function exists, it must send the file and terminate. Whatever it returns leads to "not found".
             $filefunction($course, $cm, $context, $filearea, $args, $forcedownload, array('preview' => $preview));
         }
 
@@ -853,7 +846,7 @@ function question_preview_question_pluginfile_joomdle($course, $context, $compon
                 ORDER by id
                 LIMIT 1";
         $params = array ($filearea, $qubaid, $filename);
-        $record =  $DB->get_record_sql($query, $params);
+        $record = $DB->get_record_sql($query, $params);
 
     $fs = get_file_storage();
 

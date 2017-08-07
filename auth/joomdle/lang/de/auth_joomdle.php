@@ -1,4 +1,9 @@
-﻿<?php 
+﻿<?php
+/**
+ * @package    auth_joomdle
+ * @copyright  2009 Qontori Pte Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 
 $string['auth_joomdletitle'] = 'Joomdle';
@@ -21,7 +26,3 @@ $string['auth_joomla_enrol_parents'] = 'Eltern in Kurse einschreiben';
 $string['auth_joomla_enrol_parents_description'] = 'Automatisches Einschreiben der Eltern in Kinderkursen';
 $string['auth_joomla_parent_role_id'] = 'Eltern Rolle ID';
 $string['auth_joomla_parent_role_id_description'] = 'Rolle ID der Eltern Rolle';
-
-
-
-?>

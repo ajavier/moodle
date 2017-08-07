@@ -574,11 +574,11 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
 
         if (empty($CFG->taskchain_lockframe)) {
             $lock_frameset = '';
-            $lock_top = '';
+            $lock_top = '';
             $lock_main = '';
         } else {
             $lock_frameset = ' border="0" frameborder="0" framespacing="0"';
-            $lock_top = ' noresize="noresize" scrolling="no"';
+            $lock_top = ' noresize="noresize" scrolling="no"';
             $lock_main = ' noresize="noresize"';
         }
 
@@ -596,7 +596,7 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
         echo '<title>'.$title.'</title>'."\n";
         echo '</head>'."\n";
         echo '<frameset rows="'.$rows.',*".'.$lock_frameset.'>'."\n";
-        echo '<frame title="'.$title_top.'" src="'.$src_top.'"'.$lock_top.' />'."\n";
+        echo '<frame title="'.$title_top.'" src="'.$src_top.'"'.$lock_top.' />'."\n";
         echo '<frame title="'.$title_main.'" src="'.$src_main.'"'.$lock_main.' />'."\n";
         echo '<noframes>'."\n";
         echo '<p>'.get_string('framesetinfo').'</p>'."\n";
@@ -880,19 +880,29 @@ class mod_taskchain_attempt_renderer extends mod_taskchain_renderer {
                 $title = ltrim($this->TC->task->sourcefile, '/');
                 break;
             case mod_taskchain::TEXTSOURCE_SPECIFIC:
+                $title = format_string($this->TC->task->titletext);
+                break;
+            case mod_taskchain::TEXTSOURCE_TASKNAME:
+                $title = format_string($this->TC->task->name);
+                break;
             default:
-                $title = $this->TC->task->name;
-                $title = format_string($title);
-                // format_string() is declared in lib/weblib.php
-                // it will pass $title through filters (e.g. multilang)
-                // and may also clean (i.e. remove tags from) it
+                $title = ''; // shouldn't happen !!
         }
 
         if ($this->TC->task->title & mod_taskchain::TITLE_CHAINNAME) {
-            $title = $this->TC->task->name.': '.$title;
+            if ($title=='') {
+                $title = $this->TC->taskchain->name;
+            } else {
+                $title = $this->TC->taskchain->name.': '.$title;
+            }
         }
+
         if ($this->TC->task->title & mod_taskchain::TITLE_SORTORDER) {
-            $title .= ' ('.$this->TC->task->sortorder.')';
+            if ($title=='') {
+                $title = $this->TC->task->sortorder;
+            } else {
+                $title .= ' ('.$this->TC->task->sortorder.')';
+            }
         }
 
         $title = mod_taskchain::textlib('utf8_to_entities', $title);

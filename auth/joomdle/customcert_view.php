@@ -36,8 +36,9 @@ $username = strtolower ($username);
 $auth = new auth_plugin_joomdle();
 $logged = $auth->call_method ("confirmJoomlaSession", $username, $token);
 
-if (!$logged)
-        return;
+if (!$logged) {
+    return;
+}
 
 $USER = get_complete_user_data('username', $username);
 complete_user_login($USER);
@@ -54,7 +55,7 @@ $template = $DB->get_record('customcert_templates', array('id' => $customcert->t
 
 $context = context_module::instance($cm->id);
 
-// Initialize $PAGE, compute blocks
+// Initialize $PAGE, compute blocks.
 $PAGE->set_url('/mod/customcert/view.php', array('id' => $cm->id));
 $PAGE->set_context($context);
 $PAGE->set_cm($cm);
@@ -141,7 +142,7 @@ if (empty($action)) {
         $customcertissue->customcertid = $customcert->id;
         $customcertissue->userid = $USER->id;
         $customcertissue->code = \mod_customcert\certificate::generate_code();
-        $customcertissue->timecreated =  time();
+        $customcertissue->timecreated = time();
         // Insert the record into the database.
         $DB->insert_record('customcert_issues', $customcertissue);
     }

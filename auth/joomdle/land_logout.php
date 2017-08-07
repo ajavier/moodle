@@ -22,23 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-require_once dirname(dirname(dirname(__FILE__))) . '/config.php';
-//require_once $CFG->dirroot . '/mnet/xmlrpc/client.php';
+require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->libdir.'/authlib.php');
 require_once($CFG->dirroot.'/auth/joomdle/auth.php');
-$name_session = "MoodleSession".$CFG->sessioncookie;
-if (array_key_exists ($name_session, $_COOKIE))
-{
-                $old_session = session_id ();
-                session_name ($name_session);
-                session_id("");
-                //session_destroy();
-             //   session_unregister("USER");
-            //    session_unregister("SESSION");
-            //    setcookie($name_session, '',  time() - 3600, '/','',0);
-				setcookie($name_session, '', time() - 3600, $CFG->sessioncookiepath, $CFG->sessioncookiedomain, $CFG->cookiesecure, $CFG->cookiehttponly);
-                unset($_SESSION);
-}
+
+// Delete session record and drop $_SESSION content.
+\core\session\manager::terminate_current();
+
 $redirect_url = get_config ('auth/joomdle', 'joomla_url');
 redirect($redirect_url);

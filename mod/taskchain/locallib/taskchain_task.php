@@ -72,6 +72,9 @@ class taskchain_task extends taskchain_base {
     /** db field: title (integer, default=3) */
     private $title               = 3;
 
+    /** db field: titletext (string (255), default='') */
+    private $titletext            = '';
+
     /** db field: stopbutton (integer, default=0) */
     private $stopbutton          = 0;
 
@@ -151,10 +154,10 @@ class taskchain_task extends taskchain_base {
     private $discarddetails      = 0;
 
     /** object representing the task source file */
-    public $source            = null;
+    public $source = null;
 
     /** object representing the task config file */
-    public $config            = null;
+    public $config = null;
 
     /**
      * get the "id" property
@@ -360,6 +363,24 @@ class taskchain_task extends taskchain_base {
      */
     public function set_title($value) {
         $this->title = $value;
+    }
+
+    /**
+     * get the "titletext" property
+     *
+     * @return string (255) the current titletext $value
+     */
+    public function get_titletext() {
+        return $this->titletext;
+    }
+
+    /**
+     * set the "titletext" property
+     *
+     * @param string (255) the new titletext $value
+     */
+    public function set_titletext($value) {
+        $this->titletext = $value;
     }
 
     /**

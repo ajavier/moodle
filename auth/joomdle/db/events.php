@@ -113,5 +113,3 @@ $observers = array(
     ),
 
 );
-
-?>

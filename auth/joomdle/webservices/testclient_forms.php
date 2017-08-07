@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package    auth_joomdle
+ * @copyright  2009 Qontori Pte Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 class joomdle_get_user_id_form extends moodleform {
     public function definition() {
         global $CFG;

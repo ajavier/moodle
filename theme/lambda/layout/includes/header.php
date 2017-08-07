@@ -96,8 +96,39 @@ if (strpos($checkuseragent, 'MSIE 8')) {$username = str_replace("'", "&prime;", 
 			else if ($login_link=='3') {$login_link_url = $wwwroot.'/login/index.php'; $login_link_txt = get_string('moodle_login_page','theme_lambda');}
 			if ($login_custom_url != '') {$login_link_url = $login_custom_url;}
 			if ($login_custom_txt != '') {$login_link_txt = $login_custom_txt;}
-        	
-			if ($auth_googleoauth2) {
+
+			$moodle_release = $CFG->version; // oauth2 Moodle core
+			if (($moodle_release >= 2017051500) && ($auth_googleoauth2)) {
+					$authsequence = get_enabled_auth_plugins(true);
+            		$potentialidps = array();
+            		foreach ($authsequence as $authname) {
+                		$authplugin = get_auth_plugin($authname);
+                		$potentialidps = array_merge($potentialidps, $authplugin->loginpage_idp_list($this->page->url->out(false)));
+            		}
+            		if (!empty($potentialidps)) { ?>
+                		<div class="potentialidps">
+                			<h6><?php echo get_string('potentialidps', 'auth') ?></h6>
+                			<div class="potentialidplist">
+                			<?php foreach ($potentialidps as $idp) { ?>
+                    			<div class="potentialidp">
+                    			<a class="btn btn-oauth2" href="<?php echo $idp['url']->out(); ?>" title="<?php echo s($idp['name']); ?>">
+                    			<?php if (!empty($idp['iconurl'])) { ?>
+                        			<img src="<?php echo s($idp['iconurl']); ?>" width="24" height="24" class="m-r-1"/>
+                    			<?php } ?>
+                    			<?php echo s($idp['name']); ?></a></div>
+                			<?php } ?>
+                			</div>
+                		</div>
+                        <div style="clear:both;"></div>
+                		<div class="forgotpass oauth2">
+        					<?php 
+							if ($login_link_url != '' and $login_link_txt != '') { ?>
+								<a target="_self" href="<?php echo $login_link_url; ?>"><?php echo $login_link_txt; ?></a>
+            				<?php } ?> 
+						</div>
+            		<?php }
+			} 
+			else if (($auth_googleoauth2) && (file_exists($CFG->dirroot . '/auth/googleoauth2/lib.php'))) { // oauth2 plugin
         		require_once($CFG->dirroot . '/auth/googleoauth2/lib.php'); auth_googleoauth2_display_buttons(); ?>
                 <div style="clear:both;"></div>
                 <div class="forgotpass oauth2">
@@ -110,11 +141,13 @@ if (strpos($checkuseragent, 'MSIE 8')) {$username = str_replace("'", "&prime;", 
         
 				<form class="navbar-form pull-right" method="post" action="<?php echo $wwwroot; ?>/login/index.php?authldap_skipntlmsso=1">
 					<div id="block-login">
-					<label id="user"><i class="fa fa-user"></i></label>	
+					<div id="user"><i class="fa fa-user"></i></div>
+                    <label for="inputName" class="lambda-sr-only"><?php echo $username; ?></label>
 					<input id="inputName" class="span2" type="text" name="username" placeholder="<?php echo $username; ?>">
-					<label id="pass"><i class="fa fa-key"></i></label>
-        			<input id="inputPassword" class="span2" type="password" name="password" id="password" placeholder="<?php echo get_string('password'); ?>">
-					<input type="submit" id="submit" name="submit" value=""/>
+					<div id="pass"><i class="fa fa-key"></i></div>
+                    <label for="inputPassword" class="lambda-sr-only"><?php echo get_string('password'); ?></label>
+                    <input id="inputPassword" class="span2" type="password" name="password" id="password" placeholder="<?php echo get_string('password'); ?>">
+					<button type="submit" id="submit"><span class="lambda-sr-only"><?php echo get_string('login'); ?></span></button>
 					</div>
         
         			<div class="forgotpass">
@@ -188,9 +221,10 @@ if (strpos($checkuseragent, 'MSIE 8')) {$username = str_replace("'", "&prime;", 
 				}?>
                 
                 <form id="search" action="<?php if ($moodle_global_search) {echo $CFG->wwwroot.'/search/index.php';} else {echo $CFG->wwwroot.'/course/search.php';} ?>" >
-                <div class="nav-divider-left"></div>							
+                <div class="divider pull-left"></div>
+                	<label for="coursesearchbox" class="lambda-sr-only"><?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?></label>						
 					<input id="coursesearchbox" type="text" onFocus="if(this.value =='<?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?>' ) this.value=''" onBlur="if(this.value=='') this.value='<?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?>'" value="<?php if ($moodle_global_search) {echo get_string('search', 'search');} else {echo get_string('searchcourses');} ?>" <?php if ($moodle_global_search) {echo 'name="q"';} else {echo 'name="search"';} ?> >
-					<input type="submit" value="">							
+					<button type="submit"><span class="lambda-sr-only"><?php echo get_string('submit'); ?></span></button>						
 				</form>
                 
             </div>

@@ -1,4 +1,9 @@
-<?php 
+<?php
+/**
+ * @package    auth_joomdle
+ * @copyright  2009 Qontori Pte Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 
 $string['pluginname'] = 'Joomdle';
@@ -41,4 +46,3 @@ $string['auth_joomla_joomla_user_groups'] = 'Usa gruppi utente di Joomla';
 $string['auth_joomla_joomla_user_groups_description'] = 'Crea gruppi utente di Joomla per studenti e insegnanti. Solo per Joomla 1.6+';
 $string['auth_joomla_use_kunena_forums'] = 'Usa i forum Kunena';
 $string['auth_joomla_use_kunena_forums_description'] = 'Sincronizza i forum del corso con i forum Kunena in Joomla. Solo per Joomla 1.6+';
-?>

@@ -42,9 +42,9 @@ echo $OUTPUT->doctype() ?>
 
 <div id="page" class="container-fluid">
 
-    <header id="page-header" class="clearfix">
+    <div id ="page-header-nav" class="clearfix">
         <?php echo $html->heading; ?>
-    </header>
+    </div>
 
     <div id="page-content" class="row-fluid">
         <div id="region-bs-main-and-pre" class="span9">

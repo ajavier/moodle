@@ -49,7 +49,7 @@ echo $OUTPUT->doctype() ?>
 <?php require_once(dirname(__FILE__).'/includes/header.php'); ?>
 <?php } else { ?>
 
-<header id="page-header" class="clearfix">
+<div id ="page-header-nav" class="clearfix">
        
     <div class="container-fluid">    
     <div class="row-fluid">
@@ -72,7 +72,7 @@ echo $OUTPUT->doctype() ?>
     </div>
     </div>
                
-</header>
+</div>
 
 <?php } ?>
 
@@ -89,7 +89,7 @@ echo $OUTPUT->doctype() ?>
         </section>
     </div>
     
-    <a href="#top" class="back-to-top"><i class="fa fa-chevron-circle-up fa-3x"></i><p><?php print_string('backtotop', 'theme_lambda'); ?></p></a>
+    <a href="#top" class="back-to-top"><i class="fa fa-chevron-circle-up fa-3x"></i><span class="lambda-sr-only"><?php echo get_string('back'); ?></span></a>
     
 </div>
 

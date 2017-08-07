@@ -64,10 +64,8 @@ class auth_joomdle_handler {
         $userinfo['username'] = $user->username;
 //        $userinfo['password'] = $password_clear;
 //        $userinfo['password2'] = $password_clear;
-		/*
         $userinfo['password'] = $user->password;
         $userinfo['password2'] = $user->password;
-		*/
 
         $userinfo['name'] = $user->firstname. " " . $user->lastname;
         $userinfo['email'] = $user->email;

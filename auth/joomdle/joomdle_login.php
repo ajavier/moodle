@@ -24,7 +24,7 @@
 
 require_once('../../config.php');
 
-// NORMAL LOGIN TO MOODLE
+// Normal login to Moodle.
 if ($_GET['login'] == 'moodle') {
 ?>
 <html>
@@ -44,9 +44,7 @@ Password: <input type=password name="password">
 </html>
 <?php
 } else {
-	//REDIRECT TO JOOMLA
+    // Redirect to Joomla.
     $url = get_config('auth/joomdle', 'joomla_url');
     header ("Location: $url");
 }
-
-?>

@@ -1,5 +1,9 @@
-<?php 
-
+<?php
+/**
+ * @package    auth_joomdle
+ * @copyright  2009 Qontori Pte Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 $string['pluginname'] = 'Joomdle';
 $string['pluginame_desc'] = 'Αυτή η μέθοδος χρησιμοποιεί τα web services του Joomdle για να γνωρίζει εάν ένας χρήστης έχει μια ενεργή συνεδρία στο in Joomla.Έκδοση 0.51';
@@ -29,4 +33,3 @@ $string['auth_joomla_sync_to_joomla_description'] = 'Συγχρονίζει το
 $string['auth_joomla_auto_sell'] = 'Auto courses<br>';
 $string['auth_joomla_auto_sell_description'] = 'Δημιουργία/ενημέρωση/διαγραφή μαθημάτων στο κατάστημα του Joomla αυτό συμβαίνει στο Moodle<br>';
 $string['auth_joomla_group_for_course'] = 'Ομάδα για το μάθημα';
-?>

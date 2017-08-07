@@ -1005,6 +1005,7 @@ The text that is displayed on the stop button can be one of the preset phrases f
 $string['stopbuttonlangpack'] = 'From language pack';
 $string['stopbuttonspecific'] = 'Use specific text';
 $string['stoptext'] = 'Stop button text';
+$string['stoptext_help'] = 'This text is used if the "Show stop button" setting specifies "Yes - Use specific text"';
 $string['storedetails'] = 'Store the raw XML details of TaskChain task attempts';
 $string['studentfeedback'] = 'Student feedback';
 $string['studentfeedback_help'] = 'If enabled, a link to a pop-up feedback window will be displayed whenever the student clicks on the "Check" button. The feedback window allows students to discuss this task with their teacher and classmates in one of the following ways:
@@ -1082,8 +1083,8 @@ $string['tasktype'] = 'Task type';
 $string['textsourcefile'] = 'Get from source file';
 $string['textsourcefilename'] = 'Use source file name';
 $string['textsourcefilepath'] = 'Use source file path';
-$string['textsourcespecific'] = 'Specific text';
-$string['textsourcetask'] = 'Get from task';
+$string['textsourcespecific'] = 'Use specific text';
+$string['textsourcetaskname'] = 'Use the task name';
 $string['timeclose'] = 'Available until';
 $string['timedout'] = 'Timed out';
 $string['timehdr'] = 'Time restrictions';
@@ -1110,17 +1111,22 @@ $string['timeopenclose_help'] = 'You can specify times when the task is accessib
 $string['title'] = 'Title';
 $string['title_help'] = 'This setting specifies the title to be displayed on the web page.
 
-**TaskChain activity name**
-: the name of this TaskChain activity will be displayed as the web page title.
+**Use the task name**
+: the task name, as defined on this page, will be displayed as the web page title.
 
 **Get from source file**
-: the title, if any, defined in the source file will be used as the web page title.
+: the title, if any, defined in the source file will be used as the web page title. Note that this option is not efficient for the server, because the source file must be read every time the title is displayed.
 
 **Use source file name**
 : the source file name, excluding any folder names, will be used as the web page title.
 
 **Use source file path**
-: the source file path, including any folder names, will be used as the web page title.';
+: the source file path, including any folder names, will be used as the web page title.
+
+**Use specific text**
+: the text in the textbox will be used as web page title.';
+$string['titletext'] = 'Title text';
+$string['titletext_help'] = 'This text is used if the "Title" setting is "Use specific text"';
 $string['titleappendsortorder'] = 'Append sort order';
 $string['titleprependchainname'] = 'Prepend chain name';
 $string['tnumber'] = 'Task attempt';
